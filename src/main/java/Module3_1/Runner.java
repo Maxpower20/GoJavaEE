@@ -1,8 +1,8 @@
-package Module3;
+package Module3_1;
 
 
-import Module3.Implementation.SemaphoreImpl;
-import Module3.Intefaces.Semaphore;
+import Module3_1.Implementation.SemaphoreImpl;
+import Module3_1.Intefaces.Semaphore;
 
 public class Runner {
 

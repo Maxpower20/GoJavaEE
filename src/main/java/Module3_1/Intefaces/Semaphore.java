@@ -1,4 +1,4 @@
-package Module3.Intefaces;
+package Module3_1.Intefaces;
 
 
 public interface Semaphore {

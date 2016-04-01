@@ -1,6 +1,6 @@
-package Module3.Implementation;
+package Module3_1.Implementation;
 
-import Module3.Intefaces.Semaphore;
+import Module3_1.Intefaces.Semaphore;
 
 
 public class SemaphoreImpl implements Semaphore {
