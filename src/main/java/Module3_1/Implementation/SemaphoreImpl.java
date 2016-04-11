@@ -39,7 +39,8 @@ public class SemaphoreImpl implements Semaphore {
     @Override
     public void release() {
         synchronized (lock) {
-           lock.notifyAll();
+
+            lock.notifyAll();
            availablePermits++;
         }
 
