@@ -5,37 +5,43 @@ import Module3_1.Intefaces.Semaphore;
 
 public class SemaphoreImpl implements Semaphore {
 
-    private int sleepingThreads;
-    private volatile int availableThreads;
+    private volatile int availablePermits;
     private final Object lock = new Object();
 
-    public SemaphoreImpl(int threadNumber) {
-        if (threadNumber <= 0) throw new IllegalArgumentException();
-        this.availableThreads = threadNumber;
+    public SemaphoreImpl(int availablePermits) {
+        if (availablePermits <= 0) throw new IllegalArgumentException();
+        this.availablePermits = availablePermits;
     }
 
     @Override
     public void acquire() throws InterruptedException {
-        acquire(1);
+        synchronized (lock) {
+            while (availablePermits == 0) {
+                lock.wait();
+            }
+        availablePermits--;
+        }
     }
 
     @Override
     public void acquire(int permits) throws InterruptedException {
         synchronized (lock) {
-            if (permits < 0 && permits > availableThreads) throw new IllegalArgumentException("Negative quantity of permits or permits are more than available threads");
+            if (permits < 0) throw new IllegalArgumentException("Negative quantity of permits or permits requested to acquire is greater than " + getAvailablePermits());
 
-            while (permits > 0) {
-                permits--;
-                sleepingThreads++;
-                availableThreads--;
+            while (availablePermits < permits) {
                 lock.wait();
             }
+            availablePermits -= permits;
         }
     }
 
+
     @Override
     public void release() {
-        release(1);
+        synchronized (lock) {
+           lock.notify();
+           availablePermits++;
+        }
 
     }
 
@@ -44,20 +50,17 @@ public class SemaphoreImpl implements Semaphore {
         synchronized (lock) {
             if (permits <= 0) throw new IllegalArgumentException("Must put a positive number of permits");
 
-            while (permits > 0) {
-                permits--;
-                sleepingThreads--;
-                availableThreads++;
-                lock.notify();
-                if (sleepingThreads == 0){
-                    break;
-                }
-            }
+
+            lock.notifyAll();
+            availablePermits += permits;
         }
     }
 
+
     @Override
     public int getAvailablePermits() {
-        return availableThreads;
+        return availablePermits;
     }
+
+
 }
