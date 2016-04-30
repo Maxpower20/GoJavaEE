@@ -1,4 +1,4 @@
-package Module3_12;
+package Module3_2;
 
 
 public interface SquareSum {
